@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,12 +14,25 @@
     <header class="header">
         <!-- Logo -->
         <a href="#" class="logo">
-            <img src="images/logo_long_rect.jpg" alt="">
+            <img src="images/logo_long_rect.png" alt="">
         </a>
 
         <!-- Navigation -->
         <nav class="navigation">
-            <a href="#">Courses</a>
+            <!-- Courses dropdown -->
+            <div class="nav-dropdown">
+                <a href="courses.html" class="dropdown-toggle" aria-expanded="false" aria-controls="coursesMenu">Courses</a>
+                <ul class="dropdown-menu" id="coursesMenu">
+                    <li><a href="qms.html">Quality Management Systems</a></li>
+                    <li><a href="ems.html">Environmental Management Systems</a></li>
+                    <li><a href="ohs.html">Occupational Health &amp; Safety Management</a></li>
+                    <li><a href="ism.html">Information Security Management Systems</a></li>
+                    <li><a href="it.html">IT Service Management System</a></li>
+                    <li><a href="rms.html">Risk Management System</a></li>
+                    <li><a href="energy.html">Energy Management System</a></li>
+                    <li><a href="fms.html">Food Safety Management System</a></li>
+                </ul>
+            </div>
             <a href="#">Blog</a>
             <a href="contact.html">Contact us</a>
         </nav>
@@ -121,7 +133,7 @@
             </a>
 
             <a href="fms.html" class="subject-card">
-                <i class="fa-solid fa-pizza-slice"></i>
+                <i class="fa-solid fa-plate-wheat"></i>
                 <span>Food Safety <br>Management System</span>
             </a>
 
@@ -852,6 +864,44 @@
 </script>
 
 
+
+<!-- Courses dropdown: opens on tap or keyboard; on a mouse it opens on hover -->
+<script>
+    (function () {
+        var dropdown = document.querySelector(".nav-dropdown");
+        if (!dropdown) return;
+        var toggle = dropdown.querySelector(".dropdown-toggle");
+        var hoverDevice = window.matchMedia("(hover: hover)");
+
+        function setOpen(open) {
+            dropdown.classList.toggle("open", open);
+            toggle.setAttribute("aria-expanded", String(open));
+        }
+
+        toggle.addEventListener("click", function (event) {
+            // A real mouse click on a computer goes to the Courses page.
+            // Taps and the keyboard open or close the menu instead.
+            if (hoverDevice.matches && event.detail > 0) return;
+            event.preventDefault();
+            setOpen(!dropdown.classList.contains("open"));
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!dropdown.contains(event.target)) setOpen(false);
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && dropdown.classList.contains("open")) {
+                setOpen(false);
+                toggle.focus();
+            }
+        });
+
+        dropdown.addEventListener("focusout", function (event) {
+            if (!dropdown.contains(event.relatedTarget)) setOpen(false);
+        });
+    })();
+</script>
 
 <script src="main.js"></script>
 </body>

@@ -1670,3 +1670,135 @@ img {
         scroll-behavior: auto !important;
     }
 }
+
+
+/* =====================================================================
+   COURSES DROPDOWN (header menu)
+   Added at the end so no existing rule is changed.
+===================================================================== */
+
+.nav-dropdown {
+    position: relative;
+}
+
+/* The "Courses" link keeps the same look as the other menu links.
+   The extra padding makes the hover area reach the menu with no gap. */
+.navigation .dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 0;
+}
+
+/* Small arrow after the word "Courses" */
+.navigation .dropdown-toggle::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 0.2s ease;
+}
+
+.nav-dropdown.open .dropdown-toggle::after {
+    transform: rotate(-135deg) translateY(-2px);
+}
+
+.nav-dropdown.open .dropdown-toggle {
+    color: #762c61;
+}
+
+/* The menu box */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: -18px;
+    z-index: 1000;
+    min-width: 370px;
+    padding: 8px 0;
+    list-style: none;
+    background: #ffffff;
+    border: 1px solid #e3e6ee;
+    border-radius: 8px;
+    box-shadow: 0 14px 30px rgba(16, 44, 108, 0.16);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    /* Fades out first, then becomes hidden */
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.nav-dropdown.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s;
+}
+
+/* Mouse users: open on hover */
+@media (hover: hover) {
+    .nav-dropdown:hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s;
+    }
+
+    .nav-dropdown:hover .dropdown-toggle {
+        color: #762c61;
+    }
+
+    .nav-dropdown:hover .dropdown-toggle::after {
+        transform: rotate(-135deg) translateY(-2px);
+    }
+}
+
+.dropdown-menu li {
+    list-style: none;
+}
+
+.navigation .dropdown-menu a {
+    display: block;
+    padding: 11px 22px;
+    font-size: 15px;
+    line-height: 1.35;
+    white-space: normal;
+}
+
+.navigation .dropdown-menu a:hover,
+.navigation .dropdown-menu a:focus-visible {
+    background: #f6eff4;
+    color: #762c61;
+}
+
+.navigation .dropdown-toggle:focus-visible,
+.navigation .dropdown-menu a:focus-visible {
+    outline: 2px solid #ad4d9a;
+    outline-offset: -2px;
+}
+
+/* Phones and small tablets: the menu spans the width of the header
+   instead of hanging under the word "Courses". */
+@media (max-width: 680px) {
+    .navigation {
+        position: relative;
+    }
+
+    .nav-dropdown {
+        position: static;
+    }
+
+    .dropdown-menu {
+        left: 0;
+        right: 0;
+        min-width: 0;
+        top: calc(100% + 2px);
+    }
+
+    .navigation .dropdown-menu a {
+        padding: 13px 20px;
+        font-size: 16px;
+    }
+}
