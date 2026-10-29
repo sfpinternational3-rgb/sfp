@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact us | SFP International Quality Institute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<div class="page">
+
+  <aside class="brand">
+    <div class="lockup">
+      <a href="index.html">
+          <img src="./images/logo_long_rect.png" alt="SFP International Quality Institute" height="56">
+          <div class="name">SFP International<br>Quality Institute<span></span></div>
+
+      </a>
+    </div>
+
+    <div>
+      <h2>We are here to help</h2>
+      <p>Ask about a course, your enrolment or your certificate. Send us a message and we will reply by email.</p>
+    </div>
+
+    <!-- REPLACE the three details below with your real contact details -->
+    <ul class="details">
+      <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="margin-top:3px"><path d="M3 9.5l4 4 8-9" fill="none" stroke="#d9a62e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Email: <a href="mailto:info@yourdomain.com">info@yourdomain.com</a></span></li>
+      <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="margin-top:3px"><path d="M3 9.5l4 4 8-9" fill="none" stroke="#d9a62e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Phone: <a href="tel:+254700000000">+254 700 000 000</a></span></li>
+      <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="margin-top:3px"><path d="M3 9.5l4 4 8-9" fill="none" stroke="#d9a62e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Office: your address, town, Kenya</span></li>
+    </ul>
+  </aside>
+
+  <main class="panel">
+    <div class="card wide">
+      <div id="formWrap">
+        <h1>Contact us</h1>
+        <p class="sub">Fill in the form and we will reply to your email address.</p>
+
+        <form id="contactForm" novalidate>
+          <div class="field">
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="nameErr">
+            <p class="err" id="nameErr" role="alert"></p>
+          </div>
+
+          <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="emailErr">
+            <p class="err" id="emailErr" role="alert"></p>
+          </div>
+
+          <div class="field">
+            <label for="topic">What is this about?</label>
+            <select id="topic" name="topic" required aria-describedby="topicErr">
+              <option value="">Choose a topic</option>
+              <option>Course enquiry</option>
+              <option>Enrolment and payment</option>
+              <option>Certificates</option>
+              <option>Technical help</option>
+              <option>Something else</option>
+            </select>
+            <p class="err" id="topicErr" role="alert"></p>
+          </div>
+
+          <div class="field">
+            <label for="message">Your message</label>
+            <textarea id="message" name="message" maxlength="2000" required aria-describedby="messageErr"></textarea>
+            <p class="count" id="count">0 / 2000</p>
+            <p class="err" id="messageErr" role="alert"></p>
+          </div>
+
+          <!-- Spam trap: real visitors never see or fill this in -->
+          <div class="trap" aria-hidden="true">
+            <label for="website">Leave this field empty</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button class="btn" id="submit" type="submit">Send message</button>
+          <div class="status" id="status" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+
+      <div class="done" id="done" hidden>
+        <h2>Message sent</h2>
+        <p id="doneText">Thank you. We will reply to your email address.</p>
+        <button class="btn" id="again" type="button">Send another message</button>
+      </div>
+
+      <p class="foot"><a href="login.html">Sign in</a> or <a href="register.html">create an account</a></p>
+    </div>
+  </main>
+
+</div>
+<script src="auth.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('contactForm'), submit = $('submit'), status = $('status');
+  var keys = ['name', 'email', 'topic', 'message'];
+  var inputs = {}, errs = {};
+  keys.forEach(function (k) { inputs[k] = $(k); errs[k] = $(k + 'Err'); });
+
+  function setError(k, msg) {
+    errs[k].textContent = msg;
+    if (msg) inputs[k].setAttribute('aria-invalid', 'true'); else inputs[k].removeAttribute('aria-invalid');
+  }
+  function validate() {
+    var first = null;
+    function bad(k, msg) { setError(k, msg); if (!first) first = inputs[k]; }
+    var n = inputs.name.value.trim(), e = inputs.email.value.trim(), m = inputs.message.value.trim();
+    if (n.length < 2) bad('name', 'Enter your full name.'); else setError('name', '');
+    if (!e) bad('email', 'Enter your email address.');
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) bad('email', 'Enter a valid email, like name@example.com.');
+    else setError('email', '');
+    if (!inputs.topic.value) bad('topic', 'Choose a topic.'); else setError('topic', '');
+    if (m.length < 10) bad('message', 'Write at least 10 characters so we can help.'); else setError('message', '');
+    if (first) first.focus();
+    return !first;
+  }
+
+  inputs.message.addEventListener('input', function () {
+    $('count').textContent = inputs.message.value.length + ' / 2000';
+  });
+
+  function showStatus(kind, msg) { status.className = 'status show ' + kind; status.textContent = msg; }
+  function reset() { submit.disabled = false; submit.textContent = 'Send message'; }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    status.className = 'status';
+    if (!validate()) return;
+    submit.disabled = true;
+    submit.textContent = 'Sending...';
+
+    Auth.post('api/contact.php', {
+      name: inputs.name.value.trim(),
+      email: inputs.email.value.trim(),
+      topic: inputs.topic.value,
+      message: inputs.message.value.trim(),
+      website: $('website').value
+    }).then(function (res) {
+      if (res.ok) {
+        $('doneText').textContent = 'Thank you, ' + inputs.name.value.trim().split(' ')[0] + '. We will reply to ' + inputs.email.value.trim() + '.';
+        $('formWrap').hidden = true;
+        $('done').hidden = false;
+        reset();
+        return;
+      }
+      var f = res.data.fields || {};
+      Object.keys(f).forEach(function (k) { if (errs[k]) setError(k, f[k]); });
+      showStatus('bad', res.data.error || 'Something went wrong. Try again.');
+      reset();
+    }).catch(function () {
+      showStatus('bad', 'Could not reach the server. Check your connection and try again.');
+      reset();
+    });
+  });
+
+  $('again').addEventListener('click', function () {
+    form.reset();
+    $('count').textContent = '0 / 2000';
+    status.className = 'status';
+    $('done').hidden = true;
+    $('formWrap').hidden = false;
+    inputs.name.focus();
+  });
+})();
+</script>
+</body>
+</html>
