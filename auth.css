@@ -47,6 +47,13 @@
     border: 2px solid rgba(217,166,46,.55);
   }
   .lockup { display: flex; align-items: center; gap: 14px; }
+  .lockup a{
+    text-decoration: none;
+    color: #82a41d;
+  }
+  .lockup a:hover{
+    color: #82a41dab;
+  }
   .lockup svg { flex: none; }
   .lockup .name { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; line-height: 1.2; }
   .lockup .name span { display: block; height: 3px; width: 100%; background: var(--gold); margin-top: 6px; border-radius: 2px; }
