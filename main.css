@@ -1,4 +1,3 @@
-
 /* Reset */
 * {
     margin: 0;
@@ -248,6 +247,196 @@ header .logo{
     .hero-image {
         max-width: 100%;
         height: 260px;
+    }
+}
+
+/* =========================
+   LAPTOP WIDTH ADJUSTMENTS
+========================= */
+
+@media (max-width: 1200px) {
+    .header {
+        padding: 0 3%;
+    }
+
+    .logo img {
+        width: 180px;
+    }
+
+    .navigation {
+        gap: 30px;
+    }
+
+    .hero {
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+
+    .hero-content h1 {
+        font-size: 40px;
+    }
+
+    .search-box {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .course-search {
+        padding: 0 8px;
+    }
+
+    .course-search button {
+        padding: 0 18px;
+    }
+
+    .subjects {
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+
+    .subject-card {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .subject-card span {
+        font-size: 16px;
+    }
+}
+
+
+/* =========================
+   TABLET ADJUSTMENTS
+========================= */
+
+@media (max-width: 850px) {
+    .header {
+        height: auto;
+        min-height: 85px;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 15px 4%;
+    }
+
+    .logo img {
+        width: 160px;
+        height: 50px;
+    }
+
+    .navigation {
+        gap: 20px;
+    }
+
+    .auth-buttons {
+        gap: 10px;
+    }
+
+    .hero {
+        padding-top: 30px;
+        min-height: auto;
+    }
+
+    .hero-content {
+        padding-top: 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 34px;
+    }
+
+    .hero-image {
+        flex-basis: 30%;
+    }
+
+    .course-search {
+        flex-direction: column;
+    }
+
+    .course-search input,
+    .course-search button {
+        width: 100%;
+        height: 48px;
+    }
+
+    .subject-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================
+   MOBILE ADJUSTMENTS
+========================= */
+
+@media (max-width: 560px) {
+    .header {
+        justify-content: center;
+    }
+
+    .navigation {
+        width: 100%;
+        justify-content: center;
+        order: 3;
+    }
+
+    .auth-buttons {
+        gap: 8px;
+    }
+
+    .hero {
+        padding: 25px 5%;
+        flex-direction: column;
+    }
+
+    .hero-content {
+        padding-top: 0;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+    }
+
+    .search-box {
+        padding: 20px 10px;
+    }
+
+    .search-box p {
+        font-size: 15px;
+    }
+
+    .search-links {
+        gap: 15px;
+    }
+
+    .search-links a {
+        font-size: 13px;
+    }
+
+    .hero-image {
+        display: none;
+    }
+
+    .subjects {
+        padding: 40px 5%;
+    }
+
+    .subjects h2 {
+        margin-bottom: 30px;
+        font-size: 22px;
+    }
+
+    .subject-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .subject-card {
+        min-height: 70px;
+    }
+
+    .view-subjects-btn {
+        margin-top: 35px;
+        font-size: 16px;
     }
 }
 /* =========================
@@ -1164,3 +1353,320 @@ header .logo{
 }
 
 
+
+
+/* =====================================================================
+   RESPONSIVE ENHANCEMENTS
+   Added at the END of the file so every original rule above is kept
+   exactly as written. Nothing here applies above 1500px except the
+   ultra-wide block, and screens between 1201px and 1499px render
+   exactly as before.
+
+   Why some earlier media queries did not work: the "Tablet" and
+   "Mobile" blocks higher up for .subjects, .subject-grid, .subject-card
+   and .view-subjects-btn come BEFORE those elements' main rules, so the
+   main rules overrode them. They are repeated below, after the main
+   rules, with the same values you wrote.
+===================================================================== */
+
+/* ---------- Safe defaults ---------- */
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+img {
+    max-width: 100%;
+}
+
+.subject-card span,
+.course-content h3,
+.course-meta span {
+    overflow-wrap: break-word;
+}
+
+.course-category {
+    max-width: calc(100% - 24px);
+}
+
+
+/* ---------- Very large screens (1500px and up) ----------
+   Keeps the header, hero and sections from stretching edge to edge.
+   Backgrounds stay full width; only the content is held to about 1400px. */
+
+@media (min-width: 1500px) {
+    .header {
+        padding-left: max(4.2%, calc((100% - 1400px) / 2));
+        padding-right: max(4.2%, calc((100% - 1400px) / 2));
+    }
+
+    .hero,
+    .subjects {
+        padding-left: max(4.1%, calc((100% - 1400px) / 2));
+        padding-right: max(4.1%, calc((100% - 1400px) / 2));
+    }
+
+    .learner-stories {
+        padding-left: max(6%, calc((100% - 1400px) / 2));
+        padding-right: max(6%, calc((100% - 1400px) / 2));
+    }
+}
+
+
+/* ---------- Small laptops and large tablets (up to 1100px) ---------- */
+
+@media (max-width: 1100px) {
+    .courses-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+
+/* ---------- Tablets (up to 1000px) ---------- */
+
+@media (max-width: 1000px) {
+    .search-links {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+}
+
+
+/* ---------- Tablets in portrait (up to 900px) ---------- */
+
+@media (max-width: 900px) {
+    .testimonials {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 46px 28px;
+    }
+}
+
+
+/* ---------- Subjects: tablet (rule-order fix, same values as before) ---------- */
+
+@media (max-width: 850px) {
+    .subject-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* ---------- Courses: two columns (up to 800px) ---------- */
+
+@media (max-width: 800px) {
+    .courses-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* ---------- Header: tidy wrapping on large phones (up to 680px) ----------
+   Uses the same arrangement you already had for 560px and below. */
+
+@media (max-width: 680px) {
+    .header {
+        justify-content: center;
+    }
+
+    .navigation {
+        width: 100%;
+        justify-content: center;
+        order: 3;
+    }
+
+    .testimonials {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ---------- Phones (up to 560px) ---------- */
+
+@media (max-width: 560px) {
+
+    /* Subjects: rule-order fix, same values as before */
+    .subjects {
+        padding: 40px 5%;
+    }
+
+    .subjects h2 {
+        margin-bottom: 30px;
+        font-size: 22px;
+    }
+
+    .subject-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .subject-card {
+        min-height: 70px;
+    }
+
+    .view-subjects-btn {
+        margin-top: 35px;
+        font-size: 16px;
+    }
+
+    /* Navigation: easier to tap */
+    .navigation a {
+        padding: 8px 2px;
+    }
+
+    /* Featured courses */
+    .featured-courses {
+        padding: 45px 0 45px;
+    }
+
+    .courses-container {
+        width: 90%;
+    }
+
+    .courses-heading {
+        margin-bottom: 28px;
+    }
+
+    .courses-heading h2 {
+        font-size: 24px;
+    }
+
+    .courses-heading p {
+        font-size: 14px;
+    }
+
+    .all-courses-action {
+        margin-top: 30px;
+    }
+
+    /* Learner stories */
+    .learner-stories {
+        padding: 28px 5% 60px;
+    }
+
+    .learner-stories > h2 {
+        margin-bottom: 40px;
+        font-size: 22px;
+    }
+
+    /* FAQ */
+    .faq-section {
+        width: 90%;
+        margin: 25px auto 50px;
+    }
+
+    .faq-heading {
+        margin-bottom: 25px;
+        font-size: 22px;
+    }
+
+    .faq-question {
+        min-height: 64px;
+        padding: 16px 4px;
+        gap: 15px;
+        font-size: 16px;
+    }
+
+    .faq-answer p {
+        padding-left: 8px;
+        padding-right: 8px;
+        font-size: 14px;
+        line-height: 1.8;
+    }
+}
+
+
+/* ---------- Courses: one column (up to 520px) ---------- */
+
+@media (max-width: 520px) {
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ---------- Small phones (up to 420px) ---------- */
+
+@media (max-width: 420px) {
+    .navigation {
+        gap: 22px;
+    }
+
+    .btn {
+        padding: 0 18px;
+    }
+
+    .hero-content h1 {
+        font-size: 28px;
+    }
+
+    .search-box p {
+        font-size: 14px;
+    }
+
+    .search-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-links span {
+        display: none;
+    }
+
+    .subject-card span {
+        font-size: 15px;
+    }
+
+    .view-subjects-btn {
+        padding: 14px 22px;
+    }
+
+    .testimonial-body p {
+        font-size: 14px;
+    }
+}
+
+
+/* ---------- Very small phones (up to 340px) ---------- */
+
+@media (max-width: 340px) {
+    .hero-content h1 {
+        font-size: 25px;
+    }
+
+    .logo img {
+        width: 140px;
+    }
+
+    .courses-heading h2 {
+        font-size: 22px;
+    }
+}
+
+
+/* ---------- Touch screens: no "stuck" hover movement ---------- */
+
+@media (hover: none) {
+    .subject-card:hover,
+    .course-card:hover {
+        transform: none;
+    }
+
+    .hero-image:hover img,
+    .course-card:hover .course-image img {
+        transform: none;
+    }
+}
+
+
+/* ---------- Respect "reduce motion" device settings ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
