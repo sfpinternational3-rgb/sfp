@@ -10,8 +10,8 @@ define('REMEMBER_DAYS', 30);
 // Contact form: messages are emailed to CONTACT_TO_EMAIL. CONTACT_FROM_EMAIL should be an
 // address on YOUR domain (for example no-reply@yourdomain.com) or hosts may reject the mail.
 // Messages are always saved in the database too, so nothing is lost if email fails.
-define('CONTACT_TO_EMAIL', 'info@yourdomain.com');
-define('CONTACT_FROM_EMAIL', 'no-reply@yourdomain.com');
+define('CONTACT_TO_EMAIL', 'sfpinternational3@gmail.com');
+define('CONTACT_FROM_EMAIL', 'sfpinternational3@gmail.com');
 
 if (!is_dir(DATA_DIR)) { mkdir(DATA_DIR, 0750, true); }
 if (!is_dir(DATA_DIR . '/sessions')) { mkdir(DATA_DIR . '/sessions', 0750, true); }

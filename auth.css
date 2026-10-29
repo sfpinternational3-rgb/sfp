@@ -46,12 +46,10 @@
     width: 420px; height: 420px; border-radius: 50%;
     border: 2px solid rgba(217,166,46,.55);
   }
-  .lockup a { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-  
-  .lockup a svg { flex: none; }
-  .lockup a .name{ font-family: var(--serif); font-weight: 700; font-size: 1.25rem; line-height: 1.2;color: black; }
-  .lockup a .name:hover {color: gold; transition: 0.3s;}
-  .lockup a .name span { display: block; height: 3px; width: 100%; background: var(--gold); margin-top: 6px; border-radius: 2px; }
+  .lockup { display: flex; align-items: center; gap: 14px; }
+  .lockup svg { flex: none; }
+  .lockup .name { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; line-height: 1.2; }
+  .lockup .name span { display: block; height: 3px; width: 100%; background: var(--gold); margin-top: 6px; border-radius: 2px; }
   .brand h2 { font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.2; margin: 0 0 14px; max-width: 18ch; }
   .brand p { margin: 0; color: rgba(255,255,255,.85); max-width: 40ch; }
   .brand ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; position: relative; z-index: 1; }
