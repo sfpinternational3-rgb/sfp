@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in | SFP International Quality Institute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<div class="page">
+
+  <aside class="brand">
+    <div class="lockup">
+      <a href="index.html">
+       <img src="images/logo_long_rect.png" alt="SFP International Quality Institute" height="56">
+      </a>
+      <div class="name">SFP International<br>Quality Institute<span></span></div>
+    </div>
+
+    <div>
+      <h2>Pick up your course where you left off</h2>
+      <p>Sign in to open your courses, track your progress, and download your certificates.</p>
+    </div>
+
+    <ul>
+      <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9" fill="none" stroke="#d9a62e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>IT service management</li>
+      <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9" fill="none" stroke="#d9a62e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Environmental management</li>
+      <li><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9.5l4 4 8-9" fill="none" stroke="#d9a62e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Risk, energy and food safety management</li>
+    </ul>
+  </aside>
+
+  <main class="panel">
+    <div class="card">
+      <h1>Sign in</h1>
+      <p class="sub">Use the email you registered with.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" autocomplete="username" inputmode="email" required aria-describedby="emailErr">
+          <p class="err" id="emailErr" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="control">
+            <input id="password" name="password" type="password" autocomplete="current-password" required aria-describedby="pwErr">
+            <button type="button" class="toggle" id="toggle" aria-controls="password" aria-pressed="false">Show</button>
+          </div>
+          <p class="err" id="pwErr" role="alert"></p>
+        </div>
+
+        <div class="row">
+          <label class="check"><input type="checkbox" id="remember" name="remember"> Keep me signed in</label>
+          <a href="forgot-password.html">Forgot your password?</a>
+        </div>
+
+        <button class="btn" id="submit" type="submit">Sign in</button>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+      </form>
+
+      <p class="foot">New to SFP? <a href="register.html">Create an account</a></p>
+    </div>
+  </main>
+
+</div>
+<script src="auth.js"></script>
+<script>
+(function () {
+  var form = document.getElementById('loginForm');
+  var email = document.getElementById('email');
+  var pw = document.getElementById('password');
+  var emailErr = document.getElementById('emailErr');
+  var pwErr = document.getElementById('pwErr');
+  var toggle = document.getElementById('toggle');
+  var submit = document.getElementById('submit');
+  var status = document.getElementById('status');
+
+  toggle.addEventListener('click', function () {
+    var show = pw.type === 'password';
+    pw.type = show ? 'text' : 'password';
+    toggle.textContent = show ? 'Hide' : 'Show';
+    toggle.setAttribute('aria-pressed', String(show));
+  });
+
+  function setError(input, el, msg) {
+    el.textContent = msg;
+    if (msg) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+  }
+  function validate() {
+    var ok = true, e = email.value.trim();
+    if (!e) { setError(email, emailErr, 'Enter your email address.'); ok = false; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { setError(email, emailErr, 'Enter a valid email, like name@example.com.'); ok = false; }
+    else setError(email, emailErr, '');
+    if (!pw.value) { setError(pw, pwErr, 'Enter your password.'); ok = false; }
+    else setError(pw, pwErr, '');
+    return ok;
+  }
+  email.addEventListener('blur', function () { if (email.value) validate(); });
+
+  function showStatus(kind, msg) {
+    status.className = 'status show ' + kind;
+    status.textContent = msg;
+  }
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    status.className = 'status';
+    if (!validate()) { (email.getAttribute('aria-invalid') ? email : pw).focus(); return; }
+
+    submit.disabled = true;
+    submit.textContent = 'Signing in...';
+
+    Auth.post('api/login.php', {
+      email: email.value.trim(),
+      password: pw.value,
+      remember: document.getElementById('remember').checked
+    }).then(function (res) {
+      if (res.ok && res.data.redirect) {
+        window.location.href = res.data.redirect;
+        return;
+      }
+      showStatus('bad', res.data.error || 'Something went wrong. Try again.');
+      submit.disabled = false;
+      submit.textContent = 'Sign in';
+    }).catch(function () {
+      showStatus('bad', 'Could not reach the server. Check your connection and try again.');
+      submit.disabled = false;
+      submit.textContent = 'Sign in';
+    });
+  });
+})();
+</script>
+</body>
+</html>

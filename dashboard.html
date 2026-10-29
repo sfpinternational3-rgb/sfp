@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My courses | SFP International Quality Institute</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<main class="dash" id="dash" hidden>
+  <div class="bar">
+    <div>
+      <h1 id="hello">Welcome</h1>
+      <p class="sub" id="who" style="margin:0"></p>
+    </div>
+    <button class="btn small" id="logout" type="button">Sign out</button>
+  </div>
+  <div class="panelbox">
+    <p style="margin:0">You are signed in. Replace this box with links to your course pages, for example your IT service management course page.</p>
+  </div>
+</main>
+<script src="auth.js"></script>
+<script>
+(function () {
+  var dash = document.getElementById('dash');
+  Auth.get('api/me.php').then(function (res) {
+    if (!res.ok) { window.location.replace('login.html'); return; }
+    document.getElementById('hello').textContent = 'Welcome, ' + res.data.name.split(' ')[0];
+    document.getElementById('who').textContent = res.data.email;
+    dash.hidden = false;
+  }).catch(function () { window.location.replace('login.html'); });
+
+  document.getElementById('logout').addEventListener('click', function () {
+    Auth.post('api/logout.php').then(function (res) {
+      window.location.href = (res.data && res.data.redirect) || 'login.html';
+    });
+  });
+})();
+</script>
+</body>
+</html>
