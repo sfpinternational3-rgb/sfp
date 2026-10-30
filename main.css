@@ -1802,3 +1802,31 @@ img {
         font-size: 16px;
     }
 }
+
+
+/* =====================================================================
+   HERO STAYS FIXED, SUBJECTS SCROLLS OVER IT
+   The hero and the subjects section sit inside .hero-stack (see index.html).
+   - Only used when the screen is at least 640px tall, so the hero is never
+     taller than the screen (this keeps landscape phones normal).
+   - Turned off for people who ask their device to reduce motion.
+===================================================================== */
+
+@media (min-height: 640px) and (prefers-reduced-motion: no-preference) {
+
+    .hero-stack {
+        position: relative;
+    }
+
+    .hero {
+        position: sticky;
+        top: 0;
+        z-index: 0;
+    }
+
+    .subjects {
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 -12px 28px rgba(9, 41, 112, 0.22);
+    }
+}
