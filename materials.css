@@ -1,0 +1,329 @@
+/* =========================================
+   LEARNING MATERIALS PAGE
+   Load this AFTER course.css. It only adds new
+   classes, so your existing course pages are not affected.
+========================================= */
+
+.materials-intro {
+    margin: 0 0 8px;
+    color: #5e5863;
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.materials-section {
+    margin-bottom: 44px;
+    scroll-margin-top: 24px;
+}
+
+.materials-section > h2 {
+    margin: 0 0 8px;
+    color: var(--course-purple);
+    font-size: 28px;
+    line-height: 1.35;
+}
+
+.materials-section > .section-note {
+    margin: 0 0 20px;
+    color: var(--course-muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ---------- Material cards ---------- */
+
+.material-list {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.material-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 20px;
+    border: 1px solid var(--course-border);
+    border-radius: 8px;
+    background: var(--course-white);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.material-card:hover {
+    border-color: #d8cde0;
+    box-shadow: 0 6px 18px rgba(42, 31, 49, 0.09);
+}
+
+.material-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: #f1ebf6;
+    color: var(--course-purple);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.material-number.is-file {
+    font-size: 20px;
+}
+
+.material-body {
+    min-width: 0;
+}
+
+.material-body h3 {
+    margin: 0 0 4px;
+    color: #38313f;
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+.material-body p {
+    margin: 0 0 8px;
+    color: #5e5863;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.material-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--course-muted);
+    font-size: 13px;
+}
+
+.material-meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.material-meta i {
+    color: var(--course-pink);
+}
+
+.material-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.material-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--course-purple);
+    border-radius: 5px;
+    background: var(--course-purple);
+    color: var(--course-white);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.material-btn:hover {
+    background: var(--course-pink);
+    border-color: var(--course-pink);
+}
+
+.material-btn.is-outline {
+    background: transparent;
+    color: var(--course-purple);
+}
+
+.material-btn.is-outline:hover {
+    background: var(--course-purple);
+    border-color: var(--course-purple);
+    color: var(--course-white);
+}
+
+/* ---------- Sidebar "On this page" list ---------- */
+
+.page-steps {
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.page-steps li {
+    border-bottom: 1px solid var(--course-border);
+}
+
+.page-steps li:last-child {
+    border-bottom: none;
+}
+
+.page-steps a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 2px;
+    color: var(--course-text);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.page-steps a:hover {
+    color: var(--course-pink);
+}
+
+.page-steps i {
+    width: 18px;
+    color: var(--course-pink);
+    text-align: center;
+}
+
+/* ---------- TAKE TEST (bottom of the page) ---------- */
+
+.take-test-section {
+    padding: 0 5.5% 70px;
+    background: var(--course-white);
+}
+
+.take-test-box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 32px;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 36px;
+    border-radius: 9px;
+    background: var(--course-purple);
+    color: var(--course-white);
+}
+
+.take-test-box .test-eyebrow {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: var(--course-yellow);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+
+.take-test-box h2 {
+    margin: 0 0 10px;
+    font-size: clamp(24px, 3vw, 32px);
+    line-height: 1.25;
+}
+
+.take-test-box p {
+    margin: 0 0 18px;
+    max-width: 680px;
+    color: #f2eaf8;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.test-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 26px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+}
+
+.test-facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.test-facts i {
+    color: var(--course-yellow);
+}
+
+.take-test-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px 34px;
+    border-radius: 6px;
+    background: var(--course-yellow);
+    color: #2a1f31;
+    font-size: 17px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.take-test-button:hover {
+    background: var(--course-white);
+    transform: translateY(-2px);
+}
+
+/* ---------- Tablets ---------- */
+
+@media (max-width: 1000px) {
+    .take-test-box {
+        padding: 30px;
+    }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 760px) {
+    .materials-section > h2 {
+        font-size: 24px;
+    }
+
+    .material-card {
+        grid-template-columns: auto minmax(0, 1fr);
+        padding: 16px;
+        gap: 14px;
+    }
+
+    .material-actions {
+        grid-column: 1 / -1;
+        justify-content: stretch;
+    }
+
+    .material-actions .material-btn {
+        flex: 1 1 0;
+    }
+
+    .take-test-section {
+        padding: 0 4% 50px;
+    }
+
+    .take-test-box {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        padding: 24px 20px;
+        border-radius: 7px;
+    }
+
+    .take-test-button {
+        width: 100%;
+        padding: 16px 20px;
+    }
+}
+
+@media (max-width: 380px) {
+    .material-number {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
