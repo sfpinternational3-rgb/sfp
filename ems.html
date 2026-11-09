@@ -672,9 +672,12 @@
                     course: form.dataset.course
                 })
             });
-            const data = await res.json();
+            const text = await res.text();
+            let data = {};
+            try { data = JSON.parse(text); } catch (e) {}
 
-            if (!res.ok) throw new Error(data.error || "Something went wrong.");
+
+            if (!res.ok) throw new Error(data.error || "Payment service not reachable yet. Please try again later.");
             window.location.href = data.url;
         } catch (err) {
             errorBox.textContent = err.message;
