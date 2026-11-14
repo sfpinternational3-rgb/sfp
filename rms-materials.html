@@ -21,6 +21,20 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Members only: hide the page until we know the learner is signed in. -->
+    <script>
+        document.documentElement.style.visibility = "hidden";
+        fetch("/api/me.php", { credentials: "same-origin" })
+            .then(function (r) {
+                if (!r.ok) {
+                    try { sessionStorage.setItem("sfp_next", "rms-materials.html"); } catch (e) {}
+                    window.location.replace("/login.html");
+                } else {
+                    document.documentElement.style.visibility = "";
+                }
+            })
+            .catch(function () { window.location.replace("/login.html"); });
+    </script>
 </head>
 
 <body>
@@ -164,10 +178,10 @@
                             </ul>
                         </div>
                         <div class="material-actions">
-                            <a class="material-btn" href="./materials/rms.pdf" target="_blank" rel="noopener">
+                            <a class="material-btn" href="/api/material?f=rms-1" target="_blank" rel="noopener">
                                 <i class="fa-regular fa-eye"></i> View
                             </a>
-                            <a class="material-btn is-outline" href="./materials/rms.pdf" download>
+                            <a class="material-btn is-outline" href="/api/material?f=rms-1&amp;download=1" download>
                                 <i class="fa-solid fa-download"></i> Download
                             </a>
                         </div>
@@ -318,14 +332,5 @@
         if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
     </script>
 
-    <!-- OPTIONAL: only let signed-in students open this page.
-         Remove the comment marks to switch it on. This path assumes this page
-         sits in a folder one level below the site root, like the course page.
-    <script>
-        fetch("../api/me.php", { credentials: "same-origin" })
-            .then(function (r) { if (!r.ok) window.location.replace("../login.html"); })
-            .catch(function () { window.location.replace("../login.html"); });
-    </script>
-    -->
 </body>
 </html>

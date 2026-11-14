@@ -21,6 +21,17 @@
       });
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (data) {
+        // After sign-in or registration, send the learner back to the page they
+        // came from (saved by the course pages as "sfp_next").
+        if (r.ok && data.redirect && /api\/(login|register)\.php/.test(url)) {
+          try {
+            var next = sessionStorage.getItem('sfp_next');
+            if (next && /^[a-z0-9-]+\.html$/i.test(next)) {
+              sessionStorage.removeItem('sfp_next');
+              data.redirect = next;
+            }
+          } catch (e) {}
+        }
         return { ok: r.ok, status: r.status, data: data };
       });
     });
