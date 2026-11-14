@@ -1,43 +1,33 @@
-import { getStore } from "@netlify/blobs";
 import { COURSES, EXAMS, PASS_MARK } from "../lib/exams.mjs";
-
-const json = (data, status = 200) =>
-  new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-  });
+import { json, readJson, store } from "../lib/common.mjs";
+import { TOKEN_RE, linkProblem, readToken, writeIfUnchanged } from "../lib/exam-tools.mjs";
 
 export default async (req) => {
-  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
+  if (req.method !== "POST") return json(405, { error: "Method not allowed" });
 
-  let body;
-  try {
-    body = await req.json();
-  } catch {
-    return json({ error: "Invalid request" }, 400);
-  }
-
+  const body = await readJson(req);
   const token = String(body.token || "");
   const answers = Array.isArray(body.answers) ? body.answers : [];
-  if (!/^[a-f0-9]{48}$/.test(token)) {
-    return json({ error: "This exam link is not valid." }, 400);
-  }
+  if (!TOKEN_RE.test(token)) return json(400, { error: "This exam link is not valid." });
 
-  const tokens = getStore("tokens");
-  const record = await tokens.get(token, { type: "json" });
-  if (!record) return json({ error: "This exam link is not valid." }, 404);
-  if (record.used) return json({ error: "This exam link has already been used." }, 410);
-  if (Date.now() > record.expiresAt) {
-    return json({ error: "This exam link has expired. Please contact the institute." }, 410);
-  }
+  const found = await readToken(token);
+  if (!found) return json(404, { error: "This exam link is not valid." });
+  const { record, etag } = found;
+
+  const problem = linkProblem(record);
+  if (problem) return json(problem.status, { error: problem.error });
+  if (!record.startedAt) return json(400, { error: "Please open the exam from your link first." });
 
   const questions = EXAMS[record.course];
   if (!questions || questions.length === 0) {
-    return json({ error: "The exam for this course is not available yet." }, 404);
+    return json(404, { error: "The exam for this course is not available yet." });
   }
 
-  // Mark the link as used first, so it cannot be submitted twice
-  await tokens.setJSON(token, { ...record, used: true, usedAt: Date.now() });
+  // Mark the link as used. This only succeeds for ONE submission, even if the
+  // button is double-clicked or two requests arrive at the same moment.
+  const now = Date.now();
+  const claimed = await writeIfUnchanged(token, { ...record, used: true, usedAt: now }, etag);
+  if (!claimed) return json(410, { error: "This exam link has already been used." });
 
   let correct = 0;
   questions.forEach((q, i) => {
@@ -46,20 +36,25 @@ export default async (req) => {
   const percent = Math.round((correct / questions.length) * 100);
   const passed = percent >= PASS_MARK;
 
-  // Keep a record of the result for your own use
-  await getStore("results").setJSON(`${record.reference}`, {
-    email: record.email,
-    name: record.name,
-    course: record.course,
-    courseTitle: COURSES[record.course],
-    correct,
-    total: questions.length,
-    percent,
-    passed,
-    submittedAt: Date.now(),
-  });
+  try {
+    await store("results").setJSON(`${record.reference}`, {
+      email: record.email,
+      name: record.name,
+      course: record.course,
+      courseTitle: COURSES[record.course],
+      correct,
+      total: questions.length,
+      percent,
+      passed,
+      mode: record.mode || null,
+      startedAt: record.startedAt,
+      submittedAt: now,
+    });
+  } catch (err) {
+    console.error("Could not save result", record.reference, err); // the student still sees their score
+  }
 
-  return json({
+  return json(200, {
     name: record.name,
     course: COURSES[record.course],
     correct,

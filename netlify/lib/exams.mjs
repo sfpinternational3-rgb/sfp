@@ -45,6 +45,101 @@ export const EXAMS = {
       answer: 1,
     },
   ],
+  // SAMPLE exam for Food Safety Management System. Written from the module summary and
+  // general food-safety knowledge: check every question against your own course PDF.
+  fms: [
+    {
+      q: "Which three types of hazard are commonly considered in food safety?",
+      options: [
+        "Biological, chemical and physical",
+        "Financial, legal and operational",
+        "Visible, audible and tactile",
+        "Seasonal, regional and local",
+      ],
+      answer: 0,
+    },
+    {
+      q: "A food safety hazard is best described as:",
+      options: [
+        "A food item that is past its best-before date",
+        "A food product that is expensive to produce",
+        "A biological, chemical or physical agent in food that may cause an adverse health effect",
+        "A delay in delivering food to customers",
+      ],
+      answer: 2,
+    },
+    {
+      q: "Which of the following is an example of a biological hazard?",
+      options: [
+        "Residue from a cleaning chemical",
+        "Salmonella bacteria on raw chicken",
+        "A fragment of glass in a jar",
+        "A metal shaving from a machine",
+      ],
+      answer: 1,
+    },
+    {
+      q: "Which of the following is an example of a physical hazard?",
+      options: [
+        "Listeria bacteria",
+        "Pesticide residue on vegetables",
+        "Norovirus carried by a food handler",
+        "A piece of broken glass in a food product",
+      ],
+      answer: 3,
+    },
+    {
+      q: "Pesticide residue on fresh vegetables is an example of which type of hazard?",
+      options: ["Chemical", "Biological", "Physical", "Financial"],
+      answer: 0,
+    },
+    {
+      q: "Which international standard specifies requirements for a food safety management system?",
+      options: ["ISO 9001", "ISO 14001", "ISO 22000", "ISO 45001"],
+      answer: 2,
+    },
+    {
+      q: "What does HACCP stand for?",
+      options: [
+        "Health and Cleaning Control Procedures",
+        "Hazard Analysis and Critical Control Points",
+        "Hygiene and Customer Care Practices",
+        "Handling and Cooking Control Plan",
+      ],
+      answer: 1,
+    },
+    {
+      q: "What is the main benefit of a food safety management system?",
+      options: [
+        "It removes the need for staff training",
+        "It guarantees that food will never be recalled",
+        "It makes food cheaper to buy",
+        "It helps an organization identify and control hazards so that the food it produces is safe to eat",
+      ],
+      answer: 3,
+    },
+    {
+      q: "Which of the following is a likely consequence of poor food safety?",
+      options: [
+        "Foodborne illness and loss of customer trust",
+        "Longer shelf life for all products",
+        "Lower cleaning costs with no risks",
+        "Fewer legal requirements to meet",
+      ],
+      answer: 0,
+    },
+    {
+      q: "In a HACCP-based system, a critical control point (CCP) is:",
+      options: [
+        "The place where food is sold to customers",
+        "The office where food safety records are filed",
+        "A step where control can be applied to prevent, eliminate or reduce a food safety hazard to an acceptable level",
+        "The last day on which a product can be sold",
+      ],
+      answer: 2,
+    },
+  ],
+
   // Add the other courses the same way, for example:
   // qms: [ { q: "...", options: ["...", "...", "...", "..."], answer: 0 } ],
 };

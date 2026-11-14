@@ -20,6 +20,12 @@
         .pass { color: #1b7f3b; }
         .fail { color: #b00020; }
         .meta { color: #5a6678; font-size: 14px; }
+        .timerbar { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center;
+                    background: #0b2a4a; color: #fff; padding: 12px 18px; border-radius: 10px; margin-bottom: 18px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+        .timerbar strong { font-size: 22px; font-variant-numeric: tabular-nums; }
+        .timerbar.low { background: #b00020; }
+        .note { background: #fff8e1; border: 1px solid #f0d98a; border-radius: 8px; padding: 12px 14px; margin-top: 14px; }
     </style>
 </head>
 <body>
@@ -34,6 +40,10 @@
         const app = document.getElementById("app");
         const token = new URLSearchParams(location.search).get("token") || "";
 
+        let timerId = null;
+        let submitting = false;
+        let leaveWarning = null;
+
         function showMessage(html) {
             app.innerHTML = '<div class="card">' + html + "</div>";
         }
@@ -44,23 +54,74 @@
             return d.innerHTML;
         }
 
+        async function readJson(res) {
+            try { return await res.json(); } catch (e) { return {}; }
+        }
+
+        function formatTime(total) {
+            const m = Math.floor(total / 60);
+            const s = total % 60;
+            return m + ":" + String(s).padStart(2, "0");
+        }
+
+        function stopTimer() {
+            if (timerId) { clearInterval(timerId); timerId = null; }
+        }
+
+        function stopLeaveWarning() {
+            if (leaveWarning) { window.removeEventListener("beforeunload", leaveWarning); leaveWarning = null; }
+        }
+
+        function startTimer(seconds, total) {
+            const endAt = Date.now() + seconds * 1000;
+            const timeEl = document.getElementById("timeLeft");
+            const barEl = document.getElementById("timerBar");
+
+            function tick() {
+                const left = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+                timeEl.textContent = formatTime(left);
+                barEl.classList.toggle("low", left <= 300);
+                if (left <= 0) {
+                    stopTimer();
+                    submitExam(total, true);
+                }
+            }
+            tick();
+            timerId = setInterval(tick, 1000);
+        }
+
         async function loadExam() {
             if (!token) {
                 showMessage('<h2>Exam link missing</h2><p class="error">Please open the link from your email.</p>');
                 return;
             }
 
-            const res = await fetch("/api/get-exam?token=" + encodeURIComponent(token));
-            const data = await res.json();
-
-            if (!res.ok) {
-                showMessage('<h2>Unable to open exam</h2><p class="error">' + escapeHtml(data.error) + "</p>");
+            let res, data;
+            try {
+                res = await fetch("/api/get-exam?token=" + encodeURIComponent(token));
+                data = await readJson(res);
+            } catch (e) {
+                showMessage('<h2>Unable to open exam</h2><p class="error">Could not reach the server. Check your connection and refresh this page. Refreshing does not use up your attempt.</p>');
                 return;
             }
 
-            let html = '<div class="card"><h2>' + escapeHtml(data.course) + " Exam</h2>" +
-                '<p class="meta">Pass mark: ' + data.passMark + "%. You have one attempt. " +
-                "Answer every question, then press Submit.</p></div>";
+            if (!res.ok) {
+                showMessage('<h2>Unable to open exam</h2><p class="error">' + escapeHtml(data.error || "Please try again.") + "</p>");
+                return;
+            }
+            if (data.secondsLeft <= 0) {
+                showMessage('<h2>Time is up</h2><p class="error">Your exam time has ended. Please contact the institute.</p>');
+                return;
+            }
+
+            let html = '<div class="timerbar" id="timerBar" role="timer"><span>Time left</span><strong id="timeLeft">' +
+                formatTime(data.secondsLeft) + "</strong></div>";
+
+            html += '<div class="card"><h2>' + escapeHtml(data.course) + " Exam</h2>" +
+                '<p class="meta">Pass mark: ' + data.passMark + "%. You have one attempt and " + data.minutes + " minutes. " +
+                "Answer every question, then press Submit.</p>" +
+                '<div class="note">The timer started when you opened this page. Refreshing the page does not restart it, ' +
+                "and your answers are submitted automatically when time runs out.</div></div>";
 
             data.questions.forEach((q, i) => {
                 html += '<div class="card"><div class="question">' + (i + 1) + ". " + escapeHtml(q.q) + "</div>";
@@ -73,40 +134,68 @@
             html += '<button id="submitBtn" type="button">Submit Exam</button><p id="formError" class="error"></p>';
             app.innerHTML = html;
 
-            document.getElementById("submitBtn").addEventListener("click", () => submitExam(data.questions.length));
+            const total = data.questions.length;
+            document.getElementById("submitBtn").addEventListener("click", () => submitExam(total, false));
+
+            // Warn before the page is closed or refreshed by accident.
+            leaveWarning = function (e) { e.preventDefault(); e.returnValue = ""; };
+            window.addEventListener("beforeunload", leaveWarning);
+
+            startTimer(data.secondsLeft, total);
         }
 
-        async function submitExam(total) {
+        async function submitExam(total, auto) {
+            if (submitting) return;
+
+            // Unanswered questions are sent as -1 (marked wrong). A manual submit must answer everything.
             const answers = [];
             for (let i = 0; i < total; i++) {
                 const picked = document.querySelector('input[name="q' + i + '"]:checked');
-                if (!picked) {
+                if (!picked && !auto) {
                     document.getElementById("formError").textContent = "Please answer question " + (i + 1) + " before submitting.";
                     return;
                 }
-                answers.push(Number(picked.value));
+                answers.push(picked ? Number(picked.value) : -1);
             }
 
-            if (!confirm("Submit your exam now? You cannot retake it with this link.")) return;
+            if (!auto && !confirm("Submit your exam now? You cannot retake it with this link.")) return;
 
+            submitting = true;
             const btn = document.getElementById("submitBtn");
+            const errorBox = document.getElementById("formError");
             btn.disabled = true;
             btn.textContent = "Submitting...";
+            errorBox.textContent = "";
 
-            const res = await fetch("/api/submit-exam", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token, answers })
-            });
-            const result = await res.json();
-
-            if (!res.ok) {
-                showMessage('<h2>Could not submit</h2><p class="error">' + escapeHtml(result.error) + "</p>");
+            let res, result;
+            try {
+                res = await fetch("/api/submit-exam", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token, answers })
+                });
+                result = await readJson(res);
+            } catch (e) {
+                // Nothing was saved, so the learner can try again.
+                submitting = false;
+                btn.disabled = false;
+                btn.textContent = "Submit Exam";
+                errorBox.textContent = "Could not reach the server. Check your connection and press Submit Exam again.";
                 return;
             }
 
+            if (!res.ok) {
+                stopTimer();
+                stopLeaveWarning();
+                showMessage('<h2>Could not submit</h2><p class="error">' + escapeHtml(result.error || "Please try again.") + "</p>");
+                return;
+            }
+
+            stopTimer();
+            stopLeaveWarning();
             showMessage(
                 "<h2>Your Result</h2>" +
+                (auto ? "<p>Time ran out, so your answers were submitted automatically.</p>" : "") +
                 "<p><strong>" + escapeHtml(result.course) + "</strong></p>" +
                 "<p>Score: " + result.correct + " / " + result.total + " (" + result.percent + "%)</p>" +
                 (result.passed

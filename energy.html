@@ -638,42 +638,99 @@
         </button>
         <p id="payError" style="color:#b00020;margin-top:8px;"></p>
     </form>
+    <p style="margin-top:12px;font-size:0.95rem;">
+        Already paid and cannot find your exam email?
+        <a href="#" id="resendLink">Resend my exam link</a>
+    </p>
+    <p id="resendMsg" role="status" style="margin-top:4px;"></p>
 </div>
 
 <script>
-    document.getElementById("payExamForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
+    (function () {
+        var form = document.getElementById("payExamForm");
+        var nameInput = document.getElementById("payName");
+        var emailInput = document.getElementById("payEmail");
+        var btn = document.getElementById("payBtn");
+        var errorBox = document.getElementById("payError");
+        var resendLink = document.getElementById("resendLink");
+        var resendMsg = document.getElementById("resendMsg");
+        var course = form.dataset.course;
+        var payLabel = "Pay and Take the Exam";
 
-        const form = e.target;
-        const btn = document.getElementById("payBtn");
-        const errorBox = document.getElementById("payError");
-        errorBox.textContent = "";
-        btn.disabled = true;
-        btn.textContent = "Redirecting to payment...";
-
-        try {
-            const res = await fetch("/api/create-checkout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: document.getElementById("payName").value,
-                    email: document.getElementById("payEmail").value,
-                    course: form.dataset.course
-                })
-            });
-            const text = await res.text();
-            let data = {};
-            try { data = JSON.parse(text); } catch (e) {}
-
-
-            if (!res.ok) throw new Error(data.error || "Payment service not reachable yet. Please try again later.");
-            window.location.href = data.url;
-        } catch (err) {
-            errorBox.textContent = err.message;
-            btn.disabled = false;
-            btn.textContent = "Pay and Take the Exam";
+        function goToLogin() {
+            try { sessionStorage.setItem("sfp_next", course + ".html"); } catch (e) {}
+            window.location.href = "/login.html";
         }
-    });
+
+        // Signed-in learners pay with their account details (the exam link goes to
+        // their account email). Everyone else is asked to sign in first.
+        fetch("/api/me.php", { credentials: "same-origin" })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (me) {
+                if (me) {
+                    nameInput.value = me.name;
+                    emailInput.value = me.email;
+                    nameInput.readOnly = true;
+                    emailInput.readOnly = true;
+                } else {
+                    nameInput.style.display = "none";
+                    emailInput.style.display = "none";
+                    nameInput.required = false;
+                    emailInput.required = false;
+                    payLabel = "Sign in to pay for the exam";
+                    btn.textContent = payLabel;
+                }
+            })
+            .catch(function () {});
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            errorBox.textContent = "";
+            btn.disabled = true;
+            btn.textContent = "Redirecting to payment...";
+
+            try {
+                const res = await fetch("/api/create-checkout", {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ course: course })
+                });
+                const text = await res.text();
+                let data = {};
+                try { data = JSON.parse(text); } catch (err) {}
+
+                if (res.status === 401) { goToLogin(); return; }
+                if (!res.ok) throw new Error(data.error || "Payment service not reachable yet. Please try again later.");
+                window.location.href = data.url;
+            } catch (err) {
+                errorBox.textContent = err.message;
+                btn.disabled = false;
+                btn.textContent = payLabel;
+            }
+        });
+
+        // "Lost your exam email?" sends the unused link again.
+        resendLink.addEventListener("click", async function (e) {
+            e.preventDefault();
+            resendMsg.textContent = "Sending...";
+            try {
+                const res = await fetch("/api/resend-exam", {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ course: course })
+                });
+                const data = await res.json().catch(function () { return {}; });
+                if (res.status === 401) { goToLogin(); return; }
+                resendMsg.textContent = res.ok
+                    ? "We have sent your exam link to your account email."
+                    : (data.error || "Could not resend the link. Please try again later.");
+            } catch (err) {
+                resendMsg.textContent = "Could not reach the server. Check your connection and try again.";
+            }
+        });
+    })();
 </script>
 
             <!-- KEY ASPECTS CARD -->
